@@ -95,9 +95,9 @@ public class WordleDictionary {
         return words;
     }
 
-    public List<String> filterWordsByCriterial(FilterCriteria criterial) {
+    public List<String> filterWordsByCriterial(FilterCriteria criteria) {
         return words.stream()
-                .filter(criterial::checkWord)
+                .filter(criteria::checkWord)
                 .collect(Collectors.toList());
     }
 }
