@@ -9,39 +9,12 @@ import java.util.stream.Collectors;
     также этот класс может содержать рутинные функции по сравнению слов, букв и т.д.
  */
 public class WordleDictionary {
-    private List<String> words;
-    private Set<String> wordSet;
+    private final List<String> words;
+    private final Set<String> wordSet;
 
     public WordleDictionary(List<String> words) {
-        this.words = Collections.unmodifiableList(new ArrayList<>(words));
+        this.words = List.copyOf(words);
         this.wordSet = new HashSet<>(words);
-    }
-
-    public int getSizeDictionary() {
-        return words.size();
-    }
-
-    public boolean isDictionaryContainsWord(String word) {
-        return wordSet.contains(word);
-    }
-
-    public String getRandomWordFromDictionary() {
-        if (!words.isEmpty()) {
-            Random random = new Random();
-            return words.get(random.nextInt(words.size()));
-        } else {
-            return null;
-        }
-    }
-
-    public List<String> getAllWordsFromDictionary() {
-        return words;
-    }
-
-    public List<String> filterWordsByCriterial(WordleGame.FilterCriteria criterial) {
-        return words.stream()
-                .filter(criterial::checkWord)
-                .collect(Collectors.toList());
     }
 
     public static String normalizeWord(String word) {
@@ -99,5 +72,32 @@ public class WordleDictionary {
         }
 
         return new String(result);
+    }
+
+    public int getSizeDictionary() {
+        return words.size();
+    }
+
+    public boolean isDictionaryContainsWord(String word) {
+        return wordSet.contains(word);
+    }
+
+    public String getRandomWordFromDictionary() {
+        if (!words.isEmpty()) {
+            Random random = new Random();
+            return words.get(random.nextInt(words.size()));
+        } else {
+            return null;
+        }
+    }
+
+    public List<String> getAllWordsFromDictionary() {
+        return words;
+    }
+
+    public List<String> filterWordsByCriterial(FilterCriteria criterial) {
+        return words.stream()
+                .filter(criterial::checkWord)
+                .collect(Collectors.toList());
     }
 }

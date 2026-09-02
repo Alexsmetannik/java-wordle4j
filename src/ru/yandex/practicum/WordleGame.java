@@ -20,12 +20,9 @@ import java.util.stream.Collectors;
  */
 public class WordleGame {
     private final String answer;
-    private int steps;
     private final WordleDictionary dictionary;
     private final PrintWriter log;
     private final int maxSteps = 6;
-    private boolean won = false;
-    private boolean finished = false;
     private final List<String> moveHistory = new ArrayList<>();
     private final List<String> resultHistory = new ArrayList<>();
     private final Set<Character> foundLetters = new HashSet<>();
@@ -33,6 +30,9 @@ public class WordleGame {
     private final Map<Character, Set<Integer>> forbiddenPositions = new HashMap<>();
     private final Map<Character, Integer> exactPositions = new HashMap<>();
     private final Set<String> usedHints = new HashSet<>();
+    private int steps;
+    private boolean won = false;
+    private boolean finished = false;
     private List<String> availableWordsForHint = null;
 
     public WordleGame(WordleDictionary dictionary, PrintWriter log) {
@@ -41,69 +41,6 @@ public class WordleGame {
         this.answer = dictionary.getRandomWordFromDictionary();
         log.println("Загадано слово: " + answer);
         log.println("Словарь содержит " + dictionary.getSizeDictionary() + " слов");
-    }
-
-    public static class FilterCriteria {
-        private Set<Character> mustContainLetters = new HashSet<>();
-        private Set<Character> mustNotContainLetters = new HashSet<>();
-        private Map<Character, Integer> exactPositions = new HashMap<>();
-        private Map<Character, Set<Integer>> forbiddenPositions = new HashMap<>();
-
-        public void addMustContainLetter(char c) {
-            mustContainLetters.add(c);
-        }
-
-        public void addMustNotContainLetter(char c) {
-            mustNotContainLetters.add(c);
-        }
-
-        public void addExactPosition(char c, int pos) {
-            exactPositions.put(c, pos);
-        }
-
-        public void addForbiddenPosition(char c, int pos) {
-            forbiddenPositions.computeIfAbsent(c, k -> new HashSet<>()).add(pos);
-        }
-
-        public boolean checkWord(String word) {
-            for (char c : word.toCharArray()) {
-                if (mustNotContainLetters.contains(c)) {
-                    return false;
-                }
-            }
-
-            char[] chars = word.toCharArray();
-            for (char c : mustContainLetters) {
-                boolean found = false;
-                for (char wc : chars) {
-                    if (wc == c) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) return false;
-            }
-
-            for (Map.Entry<Character, Integer> entry : exactPositions.entrySet()) {
-                char c = entry.getKey();
-                int pos = entry.getValue();
-                if (pos >= chars.length || chars[pos] != c) {
-                    return false;
-                }
-            }
-
-            for (Map.Entry<Character, Set<Integer>> entry : forbiddenPositions.entrySet()) {
-                char c = entry.getKey();
-                Set<Integer> forbidden = entry.getValue();
-                for (int i = 0; i < chars.length; i++) {
-                    if (chars[i] == c && forbidden.contains(i)) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
     }
 
     public boolean isFinished() {
@@ -229,7 +166,7 @@ public class WordleGame {
         }
 
         if (hint == null) {
-            hint = candidates.get(0);
+            hint = candidates.getFirst();
         }
 
         usedHints.add(hint);
