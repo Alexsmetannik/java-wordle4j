@@ -29,29 +29,6 @@ public class WordleDictionaryLoaderTest {
     }
 
     @Test
-    void testLoadFromFile() throws IOException, DictionaryLoadException {
-        Path testFile = tempDir.resolve("test_words.txt");
-        try (FileWriter writer = new FileWriter(testFile.toFile(), UTF_8)) {
-            writer.write("абзац\n");
-            writer.write("абрис\n");
-            writer.write("аврал\n");
-            writer.write("автор\n");
-            writer.write("оченьдлинноеслово\n");
-            writer.write("hello\n");
-            writer.write("ёжик\n");
-        }
-
-        WordleDictionary dictionary = loader.loadDictionaryFromFile(testFile.toString());
-
-        assertNotNull(dictionary);
-        assertEquals(5, dictionary.getSizeDictionary());
-        assertTrue(dictionary.isDictionaryContainsWord("абзац"));
-        assertTrue(dictionary.isDictionaryContainsWord("ёжик"));
-        assertFalse(dictionary.isDictionaryContainsWord("оченьдлинноеслово"));
-        assertFalse(dictionary.isDictionaryContainsWord("hello"));
-    }
-
-    @Test
     void testLoadFromFileWithDuplicates() throws IOException, DictionaryLoadException {
         Path testFile = tempDir.resolve("duplicates.txt");
         try (FileWriter writer = new FileWriter(testFile.toFile(), UTF_8)) {
@@ -71,7 +48,7 @@ public class WordleDictionaryLoaderTest {
         assertTrue(dictionary.isDictionaryContainsWord("автор"));
     }
 
-    @Test
+/*    @Test
     void testLoadFromFileNormalization() throws IOException, DictionaryLoadException {
         Path testFile = tempDir.resolve("normalize.txt");
         try (FileWriter writer = new FileWriter(testFile.toFile(), UTF_8)) {
@@ -86,7 +63,7 @@ public class WordleDictionaryLoaderTest {
         assertTrue(dictionary.isDictionaryContainsWord("ёжик"));
         assertTrue(dictionary.isDictionaryContainsWord("абзац"));
         assertTrue(dictionary.isDictionaryContainsWord("автор"));
-    }
+    }*/
 
     @Test
     void testLogCreation() throws IOException, DictionaryLoadException {

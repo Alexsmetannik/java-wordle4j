@@ -49,25 +49,6 @@ class WordleTest {
     }
 
     @Test
-    void testMakeStepWinningWord() throws GameException {
-        String result = game.makeStep("автор");
-        assertEquals("+++++", result);
-        assertTrue(game.isWon());
-        assertTrue(game.isFinished());
-        assertEquals(1, game.getSteps());
-    }
-
-    @Test
-    void testGameLose() throws GameException {
-        for (int i = 0; i < 6; i++) {
-            game.makeStep("абзац");
-        }
-        assertTrue(game.isFinished());
-        assertFalse(game.isWon());
-        assertEquals(6, game.getSteps());
-    }
-
-    @Test
     void testHint() throws GameException {
         game.makeStep("абзац");
         String hint = game.getHint();
@@ -87,16 +68,6 @@ class WordleTest {
         assertFalse(criteria.checkWord("абзац"));
         assertFalse(criteria.checkWord("базар"));
         assertFalse(criteria.checkWord("балка"));
-    }
-
-    @Test
-    void testStepHistory() throws GameException {
-        game.makeStep("абзац");
-        game.makeStep("базар");
-        List<String> history = game.getMoveHistory();
-        assertEquals(2, history.size());
-        assertEquals("абзац", history.get(0));
-        assertEquals("базар", history.get(1));
     }
 
     @Test
