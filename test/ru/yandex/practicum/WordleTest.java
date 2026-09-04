@@ -20,7 +20,6 @@ class WordleTest {
     void beforeStep() throws DictionaryLoadException {
         List<String> words = Arrays.asList(
                 "абзац", "абрис", "аврал", "автор", "адрес",
-                "азбука", "аист", "акробат", "алмаз", "ангел",
                 "бабка", "базар", "байка", "бакен", "балка",
                 "банка", "барак", "барин", "барон", "басня"
         );
