@@ -48,23 +48,6 @@ public class WordleDictionaryLoaderTest {
         assertTrue(dictionary.isDictionaryContainsWord("автор"));
     }
 
-/*    @Test
-    void testLoadFromFileNormalization() throws IOException, DictionaryLoadException {
-        Path testFile = tempDir.resolve("normalize.txt");
-        try (FileWriter writer = new FileWriter(testFile.toFile(), UTF_8)) {
-            writer.write("ЁЖИК\n");
-            writer.write("  АБЗАЦ  \n");
-            writer.write("АВТОР\n");
-        }
-
-        WordleDictionary dictionary = loader.loadDictionaryFromFile(testFile.toString());
-
-        assertNotNull(dictionary);
-        assertTrue(dictionary.isDictionaryContainsWord("ёжик"));
-        assertTrue(dictionary.isDictionaryContainsWord("абзац"));
-        assertTrue(dictionary.isDictionaryContainsWord("автор"));
-    }*/
-
     @Test
     void testLogCreation() throws IOException, DictionaryLoadException {
         Path testFile = tempDir.resolve("test.txt");
@@ -75,8 +58,8 @@ public class WordleDictionaryLoaderTest {
 
         loader.loadDictionaryFromFile(testFile.toString());
         log.flush();
-
         String logContent = logWriter.toString();
+        
         assertTrue(logContent.contains("Загрузка словаря из файла:"));
     }
 }

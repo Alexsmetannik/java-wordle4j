@@ -28,17 +28,32 @@ public class WordleGame {
     private final Set<Character> foundLetters = new HashSet<>();
     private final Set<Character> notFoundLetters = new HashSet<>();
     private final Map<Character, Set<Integer>> forbiddenPositions = new HashMap<>();
-    private final Map<Character, Integer> exactPositions = new HashMap<>();
+    private final Map<Integer, Character> exactPositions = new HashMap<>();
     private final Set<String> usedHints = new HashSet<>();
     private int steps;
     private boolean won = false;
     private boolean finished = false;
     private List<String> availableWordsForHint = null;
 
-    public WordleGame(WordleDictionary dictionary, PrintWriter log) {
+    public WordleGame(WordleDictionary dictionary, PrintWriter log) throws DictionaryLoadException {
         this.dictionary = dictionary;
         this.log = log;
+        String randomWord = dictionary.getRandomWordFromDictionary();
+        if (randomWord == null) {
+            throw new DictionaryLoadException("Словарь пуст, невозможно начать игру");
+        }
         this.answer = dictionary.getRandomWordFromDictionary();
+        log.println("Загадано слово: " + answer);
+        log.println("Словарь содержит " + dictionary.getSizeDictionary() + " слов");
+    }
+
+    public WordleGame(WordleDictionary dictionary, PrintWriter log, String fixedAnswer) throws DictionaryLoadException {
+        this.dictionary = dictionary;
+        this.log = log;
+        if (fixedAnswer == null || fixedAnswer.isEmpty()) {
+            throw new DictionaryLoadException("Ответ не может быть пустым");
+        }
+        this.answer = fixedAnswer;
         log.println("Загадано слово: " + answer);
         log.println("Словарь содержит " + dictionary.getSizeDictionary() + " слов");
     }
@@ -121,7 +136,7 @@ public class WordleGame {
             char c = guessChars[i];
             if (resultChars[i] == '+') {
                 foundLetters.add(c);
-                exactPositions.put(c, i);
+                exactPositions.put(i, c);
                 notFoundLetters.remove(c);
             }
         }
@@ -157,17 +172,8 @@ public class WordleGame {
             throw new HintNotFoundException();
         }
 
-        String hint = null;
-        for (String word : candidates) {
-            if (!usedHints.contains(word)) {
-                hint = word;
-                break;
-            }
-        }
-
-        if (hint == null) {
-            hint = candidates.getFirst();
-        }
+        Random random = new Random();
+        String hint = candidates.get(random.nextInt(candidates.size()));
 
         usedHints.add(hint);
         log.println("Дана подсказка: " + hint);
@@ -184,18 +190,22 @@ public class WordleGame {
         for (char c : foundLetters) {
             criteria.addMustContainLetter(c);
         }
+
         for (char c : notFoundLetters) {
             criteria.addMustNotContainLetter(c);
         }
-        for (Map.Entry<Character, Integer> entry : exactPositions.entrySet()) {
+
+        for (Map.Entry<Integer, Character> entry : exactPositions.entrySet()) {
             criteria.addExactPosition(entry.getKey(), entry.getValue());
         }
+
         for (Map.Entry<Character, Set<Integer>> entry : forbiddenPositions.entrySet()) {
             char c = entry.getKey();
             for (int pos : entry.getValue()) {
                 criteria.addForbiddenPosition(c, pos);
             }
         }
+
         List<String> candidates = dictionary.filterWordsByCriterial(criteria);
 
         Set<String> usedWords = new HashSet<>(moveHistory);

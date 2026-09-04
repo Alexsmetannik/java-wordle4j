@@ -51,11 +51,9 @@ public class WordleDictionaryTest {
     @Test
     void testCompareWords() {
         assertEquals("+++++", WordleDictionary.compareWords("абзац", "абзац"));
-        String result = WordleDictionary.compareWords("абзац", "абрис");
-        assertEquals(5, result.length());
-        result = WordleDictionary.compareWords("абзац", "абрис");
-        assertNotNull(result);
-        assertEquals(5, result.length());
+        assertEquals("+^-^-", WordleDictionary.compareWords("гонец", "герой"));
+        assertEquals("++++-", WordleDictionary.compareWords("баран", "барак"));
+        assertEquals("++-^^", WordleDictionary.compareWords("балка", "барак"));
     }
 
     @Test

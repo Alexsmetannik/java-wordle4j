@@ -57,16 +57,19 @@ public class WordleDictionary {
 
         for (int i = 0; i < guess.length(); i++) {
             if (usedInGuess[i]) continue;
-            boolean found = false;
+
             for (int j = 0; j < answer.length(); j++) {
                 if (!usedInAnswer[j] && guessChars[i] == answerChars[j]) {
                     result[i] = '^';
                     usedInAnswer[j] = true;
-                    found = true;
+                    usedInGuess[i] = true;
                     break;
                 }
             }
-            if (!found) {
+        }
+
+        for (int i = 0; i < guess.length(); i++) {
+            if (!usedInGuess[i]) {
                 result[i] = '-';
             }
         }
@@ -83,16 +86,11 @@ public class WordleDictionary {
     }
 
     public String getRandomWordFromDictionary() {
-        if (!words.isEmpty()) {
-            Random random = new Random();
-            return words.get(random.nextInt(words.size()));
-        } else {
+        if (words.isEmpty()) {
             return null;
         }
-    }
-
-    public List<String> getAllWordsFromDictionary() {
-        return words;
+        Random random = new Random();
+        return words.get(random.nextInt(words.size()));
     }
 
     public List<String> filterWordsByCriterial(FilterCriteria criteria) {

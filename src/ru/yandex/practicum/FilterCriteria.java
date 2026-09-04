@@ -8,7 +8,7 @@ import java.util.Set;
 public class FilterCriteria {
     private final Set<Character> mustContainLetters = new HashSet<>();
     private final Set<Character> mustNotContainLetters = new HashSet<>();
-    private final Map<Character, Integer> exactPositions = new HashMap<>();
+    private final Map<Integer, Character> exactPositions = new HashMap<>();
     private final Map<Character, Set<Integer>> forbiddenPositions = new HashMap<>();
 
     public void addMustContainLetter(char c) {
@@ -19,8 +19,8 @@ public class FilterCriteria {
         mustNotContainLetters.add(c);
     }
 
-    public void addExactPosition(char c, int pos) {
-        exactPositions.put(c, pos);
+    public void addExactPosition(int pos, char c) {
+        exactPositions.put(pos, c);
     }
 
     public void addForbiddenPosition(char c, int pos) {
@@ -46,9 +46,9 @@ public class FilterCriteria {
             if (!found) return false;
         }
 
-        for (Map.Entry<Character, Integer> entry : exactPositions.entrySet()) {
-            char c = entry.getKey();
-            int pos = entry.getValue();
+        for (Map.Entry<Integer, Character> entry : exactPositions.entrySet()) {
+            int pos = entry.getKey();
+            char c = entry.getValue();
             if (pos >= chars.length || chars[pos] != c) {
                 return false;
             }
@@ -63,7 +63,6 @@ public class FilterCriteria {
                 }
             }
         }
-
         return true;
     }
 }
